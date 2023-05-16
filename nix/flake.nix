@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "flake:nixpkgs/nixpkgs-unstable";
+
     nixpkgs-darwin.url = "flake:nixpkgs/nixpkgs-22.11-darwin";
 
     nix-darwin.url = "flake:nix-darwin";
@@ -18,6 +19,9 @@
     p10k.flake = false;
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    fufexan.url = "github:fufexan/dotfiles";
+    fufexan.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:

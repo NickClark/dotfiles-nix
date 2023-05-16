@@ -46,6 +46,17 @@
     htop.enable = true;
     jq.enable = true;
 
+    kitty = {
+      enable = true;
+      font.name = if pkgs.stdenv.hostPlatform.isDarwin then "JetBrainsMono Nerd Font Regular" else "JetBrainsMono NF Regular";
+      settings = {
+        bold_font = if pkgs.stdenv.hostPlatform.isDarwin then "JetBrainsMono Nerd Font Bold" else "JetBrainsMono NF Bold";
+        italic_font = if pkgs.stdenv.hostPlatform.isDarwin then "JetBrainsMono Nerd Font Italic" else "JetBrainsMono NF Italic";
+        bold_italic_font = if pkgs.stdenv.hostPlatform.isDarwin then "JetBrainsMono Nerd Font Bold Italic" else "JetBrainsMono NF Bold Italic";
+        font_size = "13.0";
+      };
+    };
+
     git = {
       enable = true;
       userName = "Nicholas Clark";

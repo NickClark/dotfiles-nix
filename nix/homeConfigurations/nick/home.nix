@@ -21,17 +21,21 @@
   home = {
     stateVersion = "22.11";
     packages = with pkgs; [
-      firefox
-      chromium
       brave
       neovide
       gnome.gnome-tweaks
       hyprpaper
       waynergy
-      kitty
       vscodium
       wofi
       wl-clipboard
+      qt6.qtwayland
+      libsForQt5.qt5.qtwayland
+      libsForQt5.polkit-kde-agent
+      xorg.xprop
+      helix
+      eww-wayland
+      discord
     ];
 
     sessionVariables = {
@@ -41,6 +45,17 @@
   xdg.configFile."hypr/hyprland.conf".source = ./hyprland.conf;
 
   programs = {
+    chromium.enable = true;
+    firefox = {
+      enable = true;
+      
+      package = pkgs.firefox.override {
+        cfg = {
+          enableGnomeExtensions = true;
+        };
+      };
+    };
+    command-not-found.enable = true;
     zsh = {
       shellAliases = {
         nx-rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles/nix";

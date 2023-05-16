@@ -11,9 +11,6 @@
       };
     };
 
-    # Allow unfree packages
-    nixpkgs.config.allowUnfree = true;
-
     # List packages installed in system profile. To search by name, run:
     # $ nix-env -qaP | grep wget
     environment.systemPackages = with pkgs; [
@@ -24,7 +21,48 @@
         curl
         git
         gnupg
+        xbindkeys
+        acpi
+        tlp
     ];
+
+    xdg = {
+        portal = {
+            enable = true;
+            extraPortals = with pkgs; [
+                xdg-desktop-portal-wlr
+                xdg-desktop-portal-gtk
+            ];
+            gtkUsePortal = true;
+        };
+    };
+
+    sound = {
+        enable = true;
+    };
+
+    security.rtkit.enable = true;
+
+    services = {
+      pipewire = {
+        enable = false;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+      };
+
+      printing.enable = true;
+    };
+
+    
+    hardware = {
+        pulseaudio.enable = true;
+        # bluetooth.enable = false;
+        opengl = {
+            enable = true;
+            driSupport = true;
+        };
+    };
 
     programs = {
       zsh = {

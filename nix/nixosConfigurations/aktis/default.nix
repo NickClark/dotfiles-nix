@@ -22,38 +22,46 @@
         users.${username} = {
           isNormalUser = true;
           description = username_description;
-          extraGroups = [ "networkmanager" "wheel" ];
+          extraGroups = ["input" "networkmanager" "wheel" ];
         };
       };
 
-      # Check shared config for more
-      environment.systemPackages = with pkgs; [
-        pciutils
-        winetricks
-        wineWowPackages.waylandFull
-        lutris
-      ];
+      environment = {
+        # Check shared config for more
+        systemPackages = with pkgs; [
+          pciutils
+          winetricks
+          wineWowPackages.waylandFull
+          lutris
+          light
+        ];
 
-      # Allow unfree packages
-      nixpkgs.config.allowUnfree = true;
+       # Needed to enable Wayland in some apps like Chromium
+       # seems to be set by default
+       #sessionVariables.NIXOS_OZONE_WL = "1";
+      };
+
+      programs.dconf.enable = true;
+
+      programs.hyprland = {
+        enable = true;
+
+        xwayland = {
+          enable = true;
+          hidpi = true;
+        };
+
+        nvidiaPatches = false;
+      };
 
       services = {
         flatpak.enable = true;
         
-        gnome = {
+        # gnome = {
           # Don't include ssh, since we want GPG to manage it
-          gnome-keyring.enable = lib.mkForce false;
-        };
+          # gnome-keyring.enable = lib.mkForce false;
+        # };
         
-        synergy = {
-          client = {
-            enable = false;
-            serverAddress = "10.0.10.5";
-            screenName = hostname;
-            autoStart = true;
-          };
-        };
-
         xserver = {
           enable = true;
           layout = "us";
@@ -64,15 +72,14 @@
           };
           desktopManager.gnome.enable = true;
         };
-        pipewire = {
-          enable = true;
-          alsa.enable = true;
-          alsa.support32Bit = true;
-          pulse.enable = true;
-        };
-        printing.enable = true;
       };
-      hardware.pulseaudio.enable = false;
+
+      hardware.extraPackages = with pkgs; [
+          intel-media-driver # LIBVA_DRIVER_NAME=iHD
+          vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+          vaapiVdpau
+          libvdpau-va-gl
+        ];
 
       # Bootloader
       boot.loader.systemd-boot.enable = true;
@@ -116,8 +123,10 @@
 in
 inputs.nixpkgs.lib.nixosSystem {
   modules = [
+    inputs.hyprland.nixosModules.default
     ../../shared/configuration.nix
     configuration
   ];
+
   system = "x86_64-linux";
 }

@@ -8,7 +8,6 @@
     stateVersion = "22.11";
     packages = with pkgs; [
       pkgs-darwin.pinentry_mac
-      pkgs-darwin.kitty
     ];
 
     sessionVariables = {
